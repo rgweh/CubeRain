@@ -1,25 +1,35 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Renderer))]
 public class Cube : MonoBehaviour
 {
     [SerializeField] private bool _hasTouchedPlatform = false;
-    [SerializeField] private Color _defaultColor = Color.white;
+    [SerializeField] private Color _defaultColor;
 
-    public Color DefaultColor => _defaultColor;
+    public event Action<Cube> OnPlatformCollisionEnter;
 
-    public bool HasTouchedPlatform => _hasTouchedPlatform;
+    public void Awake()
+    {
+        _hasTouchedPlatform = false;
+        GetComponent<Renderer>().material.color = _defaultColor;
+    }
 
     public void ModifyCubeOnHit()
     {
         _hasTouchedPlatform = true;
-        this.GetComponent<Renderer>().material.color = Random.ColorHSV();
+        GetComponent<Renderer>().material.color = UnityEngine.Random.ColorHSV();
     }
 
-    public void ModifyOnSpawn()
+    private void OnCollisionEnter(Collision collision)
     {
-        _hasTouchedPlatform = false;
-        this.GetComponent<Renderer>().material.color = Color.white;
+        if (_hasTouchedPlatform == false)
+        {
+            if (collision.gameObject.TryGetComponent(out Platform platform))
+            {
+                OnPlatformCollisionEnter?.Invoke(this);
+            }
+        }
     }
 }
 

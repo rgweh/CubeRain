@@ -1,25 +1,37 @@
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class CubeSpawner : MonoBehaviour
 {
     [SerializeField] private Vector3 _cubeSpawnPoint;
+    [SerializeField] private Cube _cubePrefab;
 
-    private Color _cubeColor = Color.white;
+    private ObjectPool<Cube> _cubePool;
     private float _spawnVariation = 8.5f;
 
-    public GameObject CreateCube()
+    private void Awake()
     {
-        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.AddComponent<Cube>();
-        cube.AddComponent<Rigidbody>();
-        cube.GetComponent<Renderer>().material.color = cube.GetComponent<Cube>().DefaultColor;
-        cube.SetActive(false);
+
+        _cubePool = new ObjectPool<Cube>(
+        createFunc: () => CreateCube(),
+        actionOnGet: (cube) => PullCube(cube),
+        actionOnRelease: (cube) => cube.gameObject.SetActive(false)
+        );
+    }
+
+    public Cube CreateCube()
+    {
+        var cube = Instantiate(_cubePrefab);
+  
+        
+        cube.gameObject.SetActive(false);
+
         return cube;
     }
 
-    public void SpawnCube(GameObject cube)
+    public void PullCube(Cube cube)
     {
-        cube.SetActive(true);
+        cube.gameObject.SetActive(true);
         cube.transform.position = new Vector3(GetRandomSpawnCoordinate(_cubeSpawnPoint.x), _cubeSpawnPoint.y, GetRandomSpawnCoordinate(_cubeSpawnPoint.z));
     }
 
