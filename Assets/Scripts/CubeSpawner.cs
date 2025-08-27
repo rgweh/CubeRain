@@ -11,7 +11,6 @@ public class CubeSpawner : MonoBehaviour
 
     private void Awake()
     {
-
         _cubePool = new ObjectPool<Cube>(
         createFunc: () => CreateCube(),
         actionOnGet: (cube) => PullCube(cube),
@@ -19,17 +18,26 @@ public class CubeSpawner : MonoBehaviour
         );
     }
 
-    public Cube CreateCube()
+    public Cube GetSpawnedCube()
+    {
+        return _cubePool.Get();
+    }
+
+    public void RemoveCube(Cube cube)
+    {
+        _cubePool.Release(cube);
+    }
+
+    private Cube CreateCube()
     {
         var cube = Instantiate(_cubePrefab);
   
-        
         cube.gameObject.SetActive(false);
 
         return cube;
     }
 
-    public void PullCube(Cube cube)
+    private void PullCube(Cube cube)
     {
         cube.gameObject.SetActive(true);
         cube.transform.position = new Vector3(GetRandomSpawnCoordinate(_cubeSpawnPoint.x), _cubeSpawnPoint.y, GetRandomSpawnCoordinate(_cubeSpawnPoint.z));

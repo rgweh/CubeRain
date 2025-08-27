@@ -1064,7 +1064,7 @@ GameObject:
   - component: {fileID: 782960445}
   - component: {fileID: 782960444}
   m_Layer: 0
-  m_Name: CubeManager
+  m_Name: CubeRain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1083,6 +1083,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cubeSpawnPoint: {x: 0, y: 30, z: 0}
+  _cubePrefab: {fileID: 6825116582372451624, guid: 9f9b0b3d192198e42883699f3070c92d, type: 3}
 --- !u!114 &782960445
 MonoBehaviour:
   m_ObjectHideFlags: 0
