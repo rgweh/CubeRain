@@ -1084,6 +1084,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cubeSpawnPoint: {x: 0, y: 30, z: 0}
   _cubePrefab: {fileID: 6825116582372451624, guid: 9f9b0b3d192198e42883699f3070c92d, type: 3}
+  _spawnTime: 0.3
+  _defaultCubeColor: {r: 1, g: 1, b: 1, a: 0}
 --- !u!114 &782960445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1096,10 +1098,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ba3a153d9a7c4429f534600e23d7f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDelay: 2
-  _maxDelay: 5
-  _spawnTime: 0.1
   _cubeSpawner: {fileID: 782960444}
+  _minRemoveDelay: 2
+  _maxRemoveDelay: 5
 --- !u!4 &782960446
 Transform:
   m_ObjectHideFlags: 0

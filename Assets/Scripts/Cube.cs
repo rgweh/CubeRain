@@ -1,26 +1,21 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Renderer))]
+[RequireComponent(typeof(Renderer), typeof(Rigidbody))]
 public class Cube : MonoBehaviour
 {
     [SerializeField] private bool _hasTouchedPlatform = false;
-    [SerializeField] private Color _defaultColor;
 
-    private Renderer _renderer;
+    public Renderer Renderer;
+    public Rigidbody Rigidbody;
 
     public event Action<Cube> OnPlatformCollisionEnter;
 
     private void OnEnable()
     {
         _hasTouchedPlatform = false;
-        _renderer = GetComponent<Renderer>();
-        _renderer.material.color = _defaultColor;
-    }
-
-    private void RecolorSelf()
-    {
-        _renderer.material.color = UnityEngine.Random.ColorHSV();
+        Renderer = GetComponent<Renderer>();
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -31,7 +26,6 @@ public class Cube : MonoBehaviour
             {
                 OnPlatformCollisionEnter?.Invoke(this);
                 _hasTouchedPlatform = true;
-                RecolorSelf();
             }
         }
     }

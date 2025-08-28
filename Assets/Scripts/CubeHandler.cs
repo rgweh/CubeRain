@@ -5,40 +5,31 @@ using UnityEngine.Pool;
 
 public class CubeHandler : MonoBehaviour
 {
-    [SerializeField] private float _minDelay;
-    [SerializeField] private float _maxDelay;
-    [SerializeField] private float _spawnTime;
     [SerializeField] private CubeSpawner _cubeSpawner;
+    [SerializeField] private float _minRemoveDelay;
+    [SerializeField] private float _maxRemoveDelay;
 
-    private void Awake()
+    private void OnEnable()
     {
-        StartCoroutine(SpawnCubes());
+        _cubeSpawner.OnCubeSpawned += SubscribeToCube;
     }
 
-    private IEnumerator SpawnCubes()
+    private void OnDisable()
     {
-        var wait = new WaitForSeconds(_spawnTime);
-
-        while (true)
-        {
-            Cube cube = _cubeSpawner.GetSpawnedCube();
-            cube.OnPlatformCollisionEnter += CubeActionOnHit;
-
-            yield return wait;
-        }
+        _cubeSpawner.OnCubeSpawned -= SubscribeToCube;
     }
 
-    private void CubeActionOnHit(Cube cube)
+    private void SubscribeToCube(Cube cube)
     {
-        float delay = Random.Range(_minDelay, _maxDelay);
-        StartCoroutine(RemoveCubeOvertime(cube, delay));
+        cube.OnPlatformCollisionEnter += RemoveCubeOvertime;
     }
 
-    private IEnumerator RemoveCubeOvertime(Cube cube, float delay)
+    private void RemoveCubeOvertime(Cube cube)
     {
-        yield return new WaitForSeconds(delay);
+        cube.OnPlatformCollisionEnter -= RemoveCubeOvertime;
+        cube.Renderer.material.color = Random.ColorHSV();
 
-        cube.OnPlatformCollisionEnter -= CubeActionOnHit;
-        _cubeSpawner.RemoveCube(cube);
+        float delay = Random.Range(_minRemoveDelay, _maxRemoveDelay);
+        StartCoroutine(_cubeSpawner.RemoveCubeOvertime(cube, delay));
     }
 }
