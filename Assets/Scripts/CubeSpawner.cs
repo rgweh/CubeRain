@@ -13,23 +13,23 @@ public class CubeSpawner : MonoBehaviour
     private ObjectPool<Cube> _cubePool;
     private float _spawnVariation = 8.5f;
 
-    public event Action<Cube> OnCubeSpawned;
-
-    private void OnEnable()
+    private void Awake()
     {
         _cubePool = new ObjectPool<Cube>(
         createFunc: () => CreateCube(),
         actionOnGet: (cube) => TakeCube(cube),
         actionOnRelease: (cube) => cube.gameObject.SetActive(false)
         );
+    }
 
+    private void OnEnable()
+    {
         StartCoroutine(SpawnCubes());
     }
 
-    public IEnumerator RemoveCubeOvertime(Cube cube, float delay)
+    public void RemoveCube(Cube cube)
     {
-        yield return new WaitForSeconds(delay);
-
+        cube.OnRemoveDelayEnd -= RemoveCube;
         _cubePool.Release(cube);
     }
 
@@ -39,8 +39,8 @@ public class CubeSpawner : MonoBehaviour
 
         while (enabled)
         {
-            Cube cube = _cubePool.Get(); ;
-            OnCubeSpawned?.Invoke(cube);
+            Cube cube = _cubePool.Get();
+            cube.OnRemoveDelayEnd += RemoveCube;
 
             yield return wait;
         }
@@ -49,7 +49,6 @@ public class CubeSpawner : MonoBehaviour
     private Cube CreateCube()
     {
         var cube = Instantiate(_cubePrefab);
-  
         cube.gameObject.SetActive(false);
 
         return cube;
@@ -57,12 +56,7 @@ public class CubeSpawner : MonoBehaviour
 
     private void TakeCube(Cube cube)
     {
-        cube.gameObject.SetActive(true);
-        cube.Rigidbody.angularVelocity = Vector3.zero;
-        cube.Rigidbody.linearVelocity = Vector3.zero;
-        cube.transform.rotation = Quaternion.identity;
-        cube.Renderer.material.color = _defaultCubeColor;
-        cube.transform.position = new Vector3(GetRandomSpawnCoordinate(_cubeSpawnPoint.x), _cubeSpawnPoint.y, GetRandomSpawnCoordinate(_cubeSpawnPoint.z));
+        cube.SetToDefault(_defaultCubeColor, new Vector3(GetRandomSpawnCoordinate(_cubeSpawnPoint.x), _cubeSpawnPoint.y, GetRandomSpawnCoordinate(_cubeSpawnPoint.z)));
     }
 
     private float GetRandomSpawnCoordinate(float coordinate)

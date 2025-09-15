@@ -1061,7 +1061,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 782960446}
-  - component: {fileID: 782960445}
   - component: {fileID: 782960444}
   m_Layer: 0
   m_Name: CubeRain
@@ -1086,21 +1085,6 @@ MonoBehaviour:
   _cubePrefab: {fileID: 6825116582372451624, guid: 9f9b0b3d192198e42883699f3070c92d, type: 3}
   _spawnTime: 0.3
   _defaultCubeColor: {r: 1, g: 1, b: 1, a: 0}
---- !u!114 &782960445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 782960443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ba3a153d9a7c4429f534600e23d7f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cubeSpawner: {fileID: 782960444}
-  _minRemoveDelay: 2
-  _maxRemoveDelay: 5
 --- !u!4 &782960446
 Transform:
   m_ObjectHideFlags: 0
